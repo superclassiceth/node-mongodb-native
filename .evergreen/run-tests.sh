@@ -13,12 +13,27 @@ AUTH=${AUTH:-noauth}
 SSL=${SSL:-nossl}
 UNIFIED=${UNIFIED:-}
 MONGODB_URI=${MONGODB_URI:-}
+NODE_ARTIFACTS_PATH="${PROJECT_DIRECTORY}/node-artifacts"
+
+# This loads the `get_distro` function
+. $DRIVERS_TOOLS/.evergreen/download-mongodb.sh
+get_distro
+
+case "$DISTRO" in
+  cygwin*)
+    # install Node.js
+    export NVM_HOME=`cygpath -w "$NODE_ARTIFACTS_PATH/nvm"`
+    export NVM_SYMLINK=`cygpath -w "$NODE_ARTIFACTS_PATH/bin"`
+    export PATH=`cygpath $NVM_SYMLINK`:`cygpath $NVM_HOME`:$PATH
+    ;;
+
+  *)
+    export PATH="/opt/mongodbtoolchain/v2/bin:$PATH"
+    export NVM_DIR="${NODE_ARTIFACTS_PATH}/nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    ;;
+esac
 
 # run tests
 echo "Running $AUTH tests over $SSL, connecting to $MONGODB_URI"
-
-export PATH="/opt/mongodbtoolchain/v2/bin:$PATH"
-NODE_ARTIFACTS_PATH="${PROJECT_DIRECTORY}/node-artifacts"
-export NVM_DIR="${NODE_ARTIFACTS_PATH}/nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 MONGODB_UNIFIED_TOPOLOGY=${UNIFIED} MONGODB_URI=${MONGODB_URI} npm test
