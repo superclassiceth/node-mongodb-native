@@ -388,7 +388,8 @@ describe('ReplSet Add Remove (mocks)', function() {
     metadata: {
       requires: {
         generators: true,
-        topology: 'single'
+        topology: 'single',
+        os: '!win32'
       }
     },
 
