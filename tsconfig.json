@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "allowJs": false,
+    "allowJs": true,
     "checkJs": false,
     "strict": true,
     "declaration": false,
@@ -11,7 +11,14 @@
     "moduleResolution": "node",
     "lib": ["ES2018"],
     "noEmitHelpers": true,
-    "noEmitOnError": true
+    "noEmitOnError": true,
+    "allowSyntheticDefaultImports":true,
+    "baseUrl": ".",
+    "rootDirs": [
+      "lib",
+      "src"
+    ]
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["index.js"]
 }

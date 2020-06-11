@@ -1,35 +1,37 @@
-'use strict';
+import Collection from '../collection';
+import { Server } from '../sdam/server';
+import CommandOperationV2 from './command_v2';
+import { Aspect, defineAspects } from './operation';
+import { maxWireVersion, formattedOrderClause } from '../utils';
+import { MongoError } from '../error'
 
-const CommandOperationV2 = require('./command_v2');
-const { Aspect, defineAspects } = require('./operation');
-const { maxWireVersion, formattedOrderClause } = require('../utils');
-const { MongoError } = require('../error');
+interface FindAndModifyOptions {
+  new: boolean,
+  remove: boolean,
+  upsert: boolean,
+  w: number | string,
+  projection: any,
+  fields: any,
+  arrayFilters: any,
+  maxTimeMS: number,
+  serializeFunctions: boolean,
+  bypassDocumentValidation: true,
+  hint: boolean
+}
 
-/**
- *
- * @class FindAndModifyOperation
- * @extends {CommandOperationV2}
- */
 class FindAndModifyOperation extends CommandOperationV2 {
-  /**
-   * @param {import('../collection')} collection
-   * @param {*} query
-   * @param {*} sort
-   * @param {*} doc
-   * @param {*} options
-   * @param {boolean} [options.new]
-   * @param {boolean} [options.remove]
-   * @param {boolean} [options.upsert]
-   * @param {number | string} [options.w]
-   * @param {*} [options.projection]
-   * @param {*} [options.fields]
-   * @param {*} [options.arrayFilters]
-   * @param {number} [options.maxTimeMS]
-   * @param {boolean} [options.serializeFunctions]
-   * @param {true} [options.bypassDocumentValidation]
-   * @param {boolean} [options.hint]
-   */
-  constructor(collection, query, sort, doc, options) {
+  collection: Collection
+  query: any
+  sort: any
+  doc: any
+
+  constructor(
+    collection: Collection,
+    query: any,
+    sort: any,
+    doc: any,
+    options: FindAndModifyOptions
+  ) {
     super(collection, options);
 
     this.collection = collection;
@@ -38,11 +40,7 @@ class FindAndModifyOperation extends CommandOperationV2 {
     this.doc = doc;
   }
 
-  /**
-   * @param {import('../sdam/server')['Server']} server
-   * @param {*} callback
-   */
-  execute(server, callback) {
+  execute(server: typeof Server, callback: (err: Error | null, result?: any) => any) {
     const coll = this.collection;
     const query = this.query;
     const sort = formattedOrderClause(this.sort);
@@ -52,7 +50,7 @@ class FindAndModifyOperation extends CommandOperationV2 {
     const unacknowledgedWrite = this.writeConcern && this.writeConcern.w === 0;
 
     // Create findAndModify command object
-    const queryObject = {
+    const queryObject: any = {
       findAndModify: coll.collectionName,
       query: query
     };
