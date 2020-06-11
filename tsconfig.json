@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "outDir": "./temp",
     "allowJs": true,
     "checkJs": false,
     "strict": true,
@@ -12,13 +13,14 @@
     "lib": ["ES2018"],
     "noEmitHelpers": true,
     "noEmitOnError": true,
-    "allowSyntheticDefaultImports":true,
-    "baseUrl": ".",
     "rootDirs": [
       "lib",
       "src"
     ]
   },
-  "include": ["src/**/*"],
-  "exclude": ["index.js"]
+  "include": ["lib/**/*"],
+  "exclude": [
+    "node_modules",
+    "test"
+  ]
 }

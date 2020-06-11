@@ -1,9 +1,15 @@
-import Collection from '../collection';
-import { Server } from '../sdam/server';
-import CommandOperationV2 from './command_v2';
-import { Aspect, defineAspects } from './operation';
-import { maxWireVersion, formattedOrderClause } from '../utils';
-import { MongoError } from '../error'
+import * as Collection from '../collection';
+import * as server from '../sdam/server';
+import * as command from './command_v2';
+import * as operation from './operation';
+import * as utils from '../utils';
+import * as error from '../error'
+
+const { Server } = server;
+const { maxWireVersion, formattedOrderClause } = utils;
+const { MongoError } = error;
+const { CommandOperationV2 } = command;
+const { Aspect, defineAspects } = operation;
 
 interface FindAndModifyOptions {
   new: boolean,

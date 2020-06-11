@@ -57,7 +57,7 @@
     "snappy": "^6.1.2",
     "standard-version": "^7.1.0",
     "through2": "^3.0.1",
-    "typescript": "^3.8.3",
+    "typescript": "^3.9.5",
     "worker-farm": "^1.5.0",
     "wtfnode": "^0.8.0",
     "yargs": "^14.2.0"
@@ -79,7 +79,8 @@
     "check:test": "mocha --recursive test/functional test/unit",
     "check:ts": "tsc --noEmit",
     "release": "standard-version -i HISTORY.md",
-    "test": "npm run check:lint && npm run check:test"
+    "test": "npm run check:lint && npm run check:test",
+    "tsc": "tsc"
   },
   "homepage": "https://github.com/mongodb/node-mongodb-native",
   "optionalDependencies": {
