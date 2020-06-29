@@ -1,5 +1,3 @@
-'use strict';
-
 // shared state names
 const STATE_CLOSING = 'closing';
 const STATE_CLOSED = 'closed';
@@ -35,12 +33,12 @@ const TOPOLOGY_DEFAULTS = {
   minHeartbeatFrequencyMS: 500
 };
 
-function drainTimerQueue(queue) {
+function drainTimerQueue(queue: any) {
   queue.forEach(clearTimeout);
   queue.clear();
 }
 
-function clearAndRemoveTimerFrom(timer, timers) {
+function clearAndRemoveTimerFrom(timer: any, timers: any) {
   clearTimeout(timer);
   return timers.delete(timer);
 }
@@ -51,7 +49,7 @@ function clearAndRemoveTimerFrom(timer, timers) {
  * @param {any} topology
  * @param {any} $clusterTime
  */
-function resolveClusterTime(topology, $clusterTime) {
+function resolveClusterTime(topology: any, $clusterTime: any) {
   if (topology.clusterTime == null) {
     topology.clusterTime = $clusterTime;
   } else {
@@ -61,7 +59,7 @@ function resolveClusterTime(topology, $clusterTime) {
   }
 }
 
-module.exports = {
+export {
   STATE_CLOSING,
   STATE_CLOSED,
   STATE_CONNECTING,

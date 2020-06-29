@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Context used during authentication
  *
@@ -10,7 +8,11 @@
  * @property {Buffer?} nonce A random nonce generated for use in an authentication conversation
  */
 class AuthContext {
-  constructor(connection, credentials, options) {
+  connection: any;
+  credentials: any;
+  options: any;
+
+  constructor(connection: any, credentials: any, options: any) {
     this.connection = connection;
     this.credentials = credentials;
     this.options = options;
@@ -25,7 +27,7 @@ class AuthProvider {
    * @param {AuthContext} authContext Context for authentication flow
    * @param {Function} callback
    */
-  prepare(handshakeDoc, authContext, callback) {
+  prepare(handshakeDoc: object, authContext: AuthContext, callback: Function) {
     callback(undefined, handshakeDoc);
   }
 
@@ -35,7 +37,7 @@ class AuthProvider {
    * @param {AuthContext} context A shared context for authentication flow
    * @param {authResultCallback} callback The callback to return the result from the authentication
    */
-  auth(context, callback) {
+  auth(context: AuthContext, callback: any) {
     callback(new TypeError('`auth` method must be overridden by subclass'));
   }
 }
@@ -48,4 +50,4 @@ class AuthProvider {
  * @param {boolean} result The result of the authentication process
  */
 
-module.exports = { AuthContext, AuthProvider };
+export { AuthContext, AuthProvider };

@@ -1,10 +1,8 @@
-'use strict';
-
-let collection;
-let cursor;
-let db;
-let client;
-let admin;
+let collection: any;
+let cursor: any;
+let db: any;
+let client: any;
+let admin: any;
 
 function loadCollection() {
   if (!collection) {
@@ -41,10 +39,4 @@ function loadAdmin() {
   return admin;
 }
 
-module.exports = {
-  loadCollection,
-  loadCursor,
-  loadDb,
-  loadMongoClient,
-  loadAdmin
-};
+export { loadCollection, loadCursor, loadDb, loadMongoClient, loadAdmin };

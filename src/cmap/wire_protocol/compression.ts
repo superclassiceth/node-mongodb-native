@@ -1,12 +1,10 @@
-'use strict';
-
-const { Snappy, kModuleError } = require('../../deps');
-const zlib = require('zlib');
+import { Snappy, kModuleError } from '../../deps';
+import zlib = require('zlib');
 
 const compressorIDs = {
   snappy: 1,
   zlib: 2
-};
+} as any;
 
 const uncompressibleCommands = new Set([
   'ismaster',
@@ -22,7 +20,7 @@ const uncompressibleCommands = new Set([
 ]);
 
 // Facilitate compressing a message using an agreed compressor
-function compress(self, dataToBeCompressed, callback) {
+function compress(self: any, dataToBeCompressed: any, callback: Function) {
   switch (self.options.agreedCompressor) {
     case 'snappy':
       if (Snappy[kModuleError]) {
@@ -33,11 +31,11 @@ function compress(self, dataToBeCompressed, callback) {
       break;
     case 'zlib':
       // Determine zlibCompressionLevel
-      var zlibOptions = {};
+      var zlibOptions = {} as any;
       if (self.options.zlibCompressionLevel) {
         zlibOptions.level = self.options.zlibCompressionLevel;
       }
-      zlib.deflate(dataToBeCompressed, zlibOptions, callback);
+      zlib.deflate(dataToBeCompressed, zlibOptions, callback as any);
       break;
     default:
       throw new Error(
@@ -49,7 +47,7 @@ function compress(self, dataToBeCompressed, callback) {
 }
 
 // Decompress a message using the given compressor
-function decompress(compressorID, compressedData, callback) {
+function decompress(compressorID: any, compressedData: any, callback: Function) {
   if (compressorID < 0 || compressorID > compressorIDs.length) {
     throw new Error(
       'Server sent message compressed using an unsupported compressor. (Received compressor ID ' +
@@ -57,6 +55,7 @@ function decompress(compressorID, compressedData, callback) {
         ')'
     );
   }
+
   switch (compressorID) {
     case compressorIDs.snappy:
       if (Snappy[kModuleError]) {
@@ -66,16 +65,11 @@ function decompress(compressorID, compressedData, callback) {
       Snappy.uncompress(compressedData, callback);
       break;
     case compressorIDs.zlib:
-      zlib.inflate(compressedData, callback);
+      zlib.inflate(compressedData, callback as any);
       break;
     default:
       callback(null, compressedData);
   }
 }
 
-module.exports = {
-  compressorIDs,
-  uncompressibleCommands,
-  compress,
-  decompress
-};
+export { compressorIDs, uncompressibleCommands, compress, decompress };

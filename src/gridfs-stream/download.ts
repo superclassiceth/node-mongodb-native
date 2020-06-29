@@ -1,6 +1,4 @@
-'use strict';
-
-const { Readable } = require('stream');
+import { Readable } from 'stream';
 
 /**
  * A readable stream that enables you to read buffers from GridFS.
@@ -22,7 +20,9 @@ const { Readable } = require('stream');
  * @fires GridFSBucketReadStream#file
  */
 class GridFSBucketReadStream extends Readable {
-  constructor(chunks, files, readPreference, filter, options) {
+  s: any;
+
+  constructor(chunks: any, files: any, readPreference: any, filter: any, options: any) {
     super();
 
     this.s = {
@@ -104,7 +104,7 @@ class GridFSBucketReadStream extends Readable {
    * @returns {GridFSBucketReadStream} Reference to Self
    */
 
-  start(start) {
+  start(start: any) {
     throwIfInitialized(this);
     this.s.options.start = start;
     return this;
@@ -120,7 +120,7 @@ class GridFSBucketReadStream extends Readable {
    * @returns {GridFSBucketReadStream} Reference to self
    */
 
-  end(end) {
+  end(end: any) {
     throwIfInitialized(this);
     this.s.options.end = end;
     return this;
@@ -137,12 +137,12 @@ class GridFSBucketReadStream extends Readable {
    * @fires GridFSBucketWriteStream#end
    */
 
-  abort(callback) {
+  abort(callback: Function) {
     var _this = this;
     this.push(null);
     this.destroyed = true;
     if (this.s.cursor) {
-      this.s.cursor.close(error => {
+      this.s.cursor.close((error: any) => {
         _this.emit('close');
         callback && callback(error);
       });
@@ -157,18 +157,18 @@ class GridFSBucketReadStream extends Readable {
   }
 }
 
-function throwIfInitialized(self) {
+function throwIfInitialized(self: any) {
   if (self.s.init) {
     throw new Error('You cannot change options after the stream has entered' + 'flowing mode!');
   }
 }
 
-function doRead(_this) {
+function doRead(_this: any) {
   if (_this.destroyed) {
     return;
   }
 
-  _this.s.cursor.next((error, doc) => {
+  _this.s.cursor.next((error?: any, doc?: any) => {
     if (_this.destroyed) {
       return;
     }
@@ -179,7 +179,7 @@ function doRead(_this) {
       _this.push(null);
 
       process.nextTick(() => {
-        _this.s.cursor.close(error => {
+        _this.s.cursor.close((error: any) => {
           if (error) {
             __handleError(_this, error);
             return;
@@ -249,8 +249,8 @@ function doRead(_this) {
   });
 }
 
-function init(self) {
-  var findOneOptions = {};
+function init(self: any) {
+  var findOneOptions = {} as any;
   if (self.s.readPreference) {
     findOneOptions.readPreference = self.s.readPreference;
   }
@@ -261,16 +261,15 @@ function init(self) {
     findOneOptions.skip = self.s.options.skip;
   }
 
-  self.s.files.findOne(self.s.filter, findOneOptions, (error, doc) => {
+  self.s.files.findOne(self.s.filter, findOneOptions, (error?: any, doc?: any) => {
     if (error) {
       return __handleError(self, error);
     }
-
     if (!doc) {
       var identifier = self.s.filter._id ? self.s.filter._id.toString() : self.s.filter.filename;
       var errmsg = 'FileNotFound: file ' + identifier + ' was not found';
       var err = new Error(errmsg);
-      err.code = 'ENOENT';
+      (err as any).code = 'ENOENT';
       return __handleError(self, err);
     }
 
@@ -289,13 +288,9 @@ function init(self) {
       return;
     }
 
-    try {
-      self.s.bytesToSkip = handleStartOption(self, doc, self.s.options);
-    } catch (error) {
-      return __handleError(self, error);
-    }
+    self.s.bytesToSkip = handleStartOption(self, doc, self.s.options);
 
-    var filter = { files_id: doc._id };
+    var filter: any = { files_id: doc._id };
 
     // Currently (MongoDB 3.4.4) skip function does not support the index,
     // it needs to retrieve all the documents first and then skip them. (CS-25811)
@@ -314,18 +309,12 @@ function init(self) {
 
     self.s.expectedEnd = Math.ceil(doc.length / doc.chunkSize);
     self.s.file = doc;
-
-    try {
-      self.s.bytesToTrim = handleEndOption(self, doc, self.s.cursor, self.s.options);
-    } catch (error) {
-      return __handleError(self, error);
-    }
-
+    self.s.bytesToTrim = handleEndOption(self, doc, self.s.cursor, self.s.options);
     self.emit('file', doc);
   });
 }
 
-function waitForFile(_this, callback) {
+function waitForFile(_this: any, callback: Function) {
   if (_this.s.file) {
     return callback();
   }
@@ -340,7 +329,7 @@ function waitForFile(_this, callback) {
   });
 }
 
-function handleStartOption(stream, doc, options) {
+function handleStartOption(stream: any, doc: any, options: any) {
   if (options && options.start != null) {
     if (options.start > doc.length) {
       throw new Error(
@@ -373,7 +362,7 @@ function handleStartOption(stream, doc, options) {
   }
 }
 
-function handleEndOption(stream, doc, cursor, options) {
+function handleEndOption(stream: any, doc: any, cursor: any, options: any) {
   if (options && options.end != null) {
     if (options.end > doc.length) {
       throw new Error(
@@ -399,8 +388,8 @@ function handleEndOption(stream, doc, cursor, options) {
   }
 }
 
-function __handleError(_this, error) {
+function __handleError(_this: any, error?: any) {
   _this.emit('error', error);
 }
 
-module.exports = GridFSBucketReadStream;
+export = GridFSBucketReadStream;
